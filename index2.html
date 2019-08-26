@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      thead {
+        background: grey;
+      }
+      tr,
+      td {
+        padding: 10px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <td id="table-header">The words</td>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+    <script>
+      const words = ["Hello", "Goodbye", "First", "A", "a", "Second", "Third"];
+
+      let isOrderAsc = false;
+
+      function drawTable() {
+        isOrderAsc = !isOrderAsc;
+
+        let output = words.sort((a, b) =>
+          a.localeCompare(b, "es", { sensitivity: "base" })
+        );
+
+        if (!isOrderAsc) {
+          output = output.reverse();
+        }
+
+        let theHTML = words.reduce(
+          (ac, cu) =>
+            (ac += `
+        <tr>
+          <td>${cu}</td>
+        </tr>
+        `),
+          ""
+        );
+
+        document.querySelector("#table-body").innerHTML = theHTML;
+      }
+
+      document.querySelector("#table-header").onclick = drawTable;
+
+      drawTable()
+    </script>
+  </body>
+</html>

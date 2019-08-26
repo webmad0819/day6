@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      html,
+      body,
+      div,
+      span,
+      applet,
+      object,
+      iframe,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      blockquote,
+      pre,
+      a,
+      abbr,
+      acronym,
+      address,
+      big,
+      cite,
+      code,
+      del,
+      dfn,
+      em,
+      img,
+      ins,
+      kbd,
+      q,
+      s,
+      samp,
+      small,
+      strike,
+      strong,
+      sub,
+      sup,
+      tt,
+      var,
+      b,
+      u,
+      i,
+      center,
+      dl,
+      dt,
+      dd,
+      ol,
+      ul,
+      li,
+      fieldset,
+      form,
+      label,
+      legend,
+      table,
+      caption,
+      tbody,
+      tfoot,
+      thead,
+      tr,
+      th,
+      td,
+      article,
+      aside,
+      canvas,
+      details,
+      embed,
+      figure,
+      figcaption,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      output,
+      ruby,
+      section,
+      summary,
+      time,
+      mark,
+      audio,
+      video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+      }
+      article,
+      aside,
+      details,
+      figcaption,
+      figure,
+      footer,
+      header,
+      hgroup,
+      menu,
+      nav,
+      section {
+        display: block;
+      }
+      body {
+        line-height: 1;
+      }
+      ol,
+      ul {
+        list-style: none;
+      }
+      blockquote,
+      q {
+        quotes: none;
+      }
+      blockquote:before,
+      blockquote:after,
+      q:before,
+      q:after {
+        content: "";
+        content: none;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      #cart {
+        padding: 20px;
+      }
+      #cart li,
+      #creation {
+        margin-bottom: 20px;
+        border: 1px solid black;
+        padding: 10px;
+        justify-content: space-between;
+        display: flex;
+      }
+
+      #creation {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="cart"></ul>
+
+    <div id="creation">
+      <div>
+        <input type="text" class="name" />
+      </div>
+      <div><input type="text" class="price" /> $</div>
+      <div></div>
+      <div></div>
+      <button id="create">Create</button>
+    </div>
+    <button id="calculate-price">Calculate Price</button>
+    <h2>Total price: <span id="total-price"></span></h2>
+    <script>
+      let products = [
+        {
+          name: "bubble",
+          price: 25,
+          qty: 1
+        },
+        {
+          name: "iphone XR",
+          price: 300,
+          qty: 1
+        }
+      ];
+
+      function drawCart() {
+        let theHTML = products.reduce((ac, product, idx) => {
+          return (ac += `
+          <li>
+            <div>
+            ${product.name}
+            </div>
+            <div>
+            ${product.price} $
+            </div>
+            <div>
+            Qty
+            <input type="number" value="${product.qty}" class="qty-${idx}" />
+            </div>
+            <div>
+            total <span class="total-${idx}"></span>$
+            </div>
+            <button class='btn btn-${idx}'>Delete</button>
+        </li>
+      `);
+        }, "");
+
+        document.querySelector("#cart").innerHTML = theHTML;
+        products.forEach((product, idx) => {
+          let totalPrice =
+            +document.querySelector(".qty-" + idx).value * product.price;
+
+          document.querySelector(".qty-" + idx).onchange = function(e) {
+            products[idx].qty = +e.target.value;
+            drawCart();
+          };
+
+          document.querySelector(".total-" + idx).innerHTML = totalPrice;
+
+          document.querySelector(".btn.btn-" + idx).onclick = function() {
+            products.splice(idx, 1);
+            drawCart();
+          };
+        });
+      }
+
+      drawCart();
+
+      document.querySelector("#create").onclick = function() {
+        products.push({
+          name: document.querySelector("#creation .name").value,
+          price: document.querySelector("#creation .price").value,
+          qty: 1
+        });
+
+        drawCart();
+      };
+
+      document.querySelector("#calculate-price").onclick = function() {
+        document.querySelector("#total-price").innerHTML = `${products.reduce(
+          (ac, cu) => ac + cu.price * cu.qty,
+          0
+        )} $`;
+      };
+    </script>
+  </body>
+</html>
